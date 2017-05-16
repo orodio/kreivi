@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import fetch from 'isomorphic-fetch'
 import { Observable } from 'rxjs/Observable'
-import 'rxjs/add/opperator/mergeMap'
+import 'rxjs/add/operator/mergeMap'
 import 'rxjs/add/observable/fromPromise'
 import 'rxjs/add/observable/interval'
 
