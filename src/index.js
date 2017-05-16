@@ -3,7 +3,7 @@ import fetch from 'isomorphic-fetch'
 
 const URL = 'https://api.graph.cool/simple/v1/cj2rx8x5bk1td0160k06m4pps'
 
-const FETCH = query =>
+export const FETCH = query =>
   fetch(URL, {
     method: 'post',
     headers: {
@@ -20,7 +20,7 @@ const COUNTER = `
         updatedAt
 `
 
-const counters = () =>
+export const counters = () =>
   FETCH(`
     query {
       counters: allCounters {
@@ -29,7 +29,7 @@ const counters = () =>
     }
   `)
 
-const counter = (id) =>
+export const counter = (id) =>
   FETCH(`
     query {
       Counter(id: "${ id }") {
@@ -38,7 +38,7 @@ const counter = (id) =>
     }
   `)
 
-const createCounter = ({ title, count = 0 }) =>
+export const createCounter = ({ title, count = 0 }) =>
   FETCH(`
     mutation {
       counter: createCounter(count: ${ count }, title: "${ title }") {
@@ -48,7 +48,7 @@ const createCounter = ({ title, count = 0 }) =>
   `)
 
 
-const updateCounterCount = (id, count) =>
+export const updateCounterCount = (id, count) =>
   FETCH(`
     mutation {
       counter: updateCounter(id: "${ id }", count: ${ count }) {
@@ -57,7 +57,7 @@ const updateCounterCount = (id, count) =>
     }
   `)
 
-const updateCounterTitle = (id, title) =>
+export const updateCounterTitle = (id, title) =>
   FETCH(`
     mutation {
       counter: updateCounter(id: "${ id }", title: "${ title }") {
@@ -66,7 +66,7 @@ const updateCounterTitle = (id, title) =>
     }
   `)
 
-const deleteCounter = (id) =>
+export const deleteCounter = (id) =>
   FETCH(`
     mutation {
       counter: deleteCounter(id: "${ id }") {
@@ -74,12 +74,3 @@ const deleteCounter = (id) =>
       }
     }
   `)
-
-export default {
-  counters,
-  counter,
-  createCounter,
-  updateCounterCount,
-  updateCounterTitle,
-  deleteCounter,
-}
