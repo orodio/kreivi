@@ -1,7 +1,17 @@
 import 'babel-polyfill'
 import fetch from 'isomorphic-fetch'
+import { Observable } from 'rxjs/Observable'
+import 'rxjs/add/opperator/mergeMap'
+import 'rxjs/add/observable/fromPromise'
+import 'rxjs/add/observable/interval'
 
 const URL = 'https://api.graph.cool/simple/v1/cj2rx8x5bk1td0160k06m4pps'
+const POLL_RATE = 500
+
+const tick$ =
+  Observable
+    .interval(POLL_RATE)
+    .share()
 
 export const FETCH = query =>
   fetch(URL, {
@@ -11,66 +21,32 @@ export const FETCH = query =>
     },
     body: JSON.stringify({ query }),
   }).then(res => res.json())
+    .then(res => res.data)
 
-const COUNTER = `
-        id
-        title
-        count
-        createdAt
-        updatedAt
-`
+const COUNTER = `id title count createdAt updatedAt`
 
 export const counters = () =>
-  FETCH(`
-    query {
-      counters: allCounters {
-        ${ COUNTER }
-      }
-    }
-  `)
+  FETCH(`{counters:allCounters(orderBy:createdAt_ASC){id hash:updatedAt}}`)
 
-export const counter = (id) =>
-  FETCH(`
-    query {
-      Counter(id: "${ id }") {
-        ${ COUNTER }
-      }
-    }
-  `)
+export const counters$ = () =>
+  tick$
+    .mergeMap(() => Observable.fromPromise(counters()))
+
+export const counter = id =>
+  FETCH(`{Counter(id:"${ id }"){ ${ COUNTER }}}`)
+
+export const counter$ = id =>
+  tick$
+    .mergeMap(() => Observable.fromPromise(counter(id)))
 
 export const createCounter = ({ title, count = 0 }) =>
-  FETCH(`
-    mutation {
-      counter: createCounter(count: ${ count }, title: "${ title }") {
-        ${ COUNTER }
-      }
-    }
-  `)
-
+  FETCH(`mutation{counter:createCounter(count:${ count },title:"${ title }"){${ COUNTER }}}`)
 
 export const updateCounterCount = (id, count) =>
-  FETCH(`
-    mutation {
-      counter: updateCounter(id: "${ id }", count: ${ count }) {
-        ${ COUNTER }
-      }
-    }
-  `)
+  FETCH(`mutation{counter:updateCounter(id:"${ id }",count:${ count }){${ COUNTER }}}`)
 
 export const updateCounterTitle = (id, title) =>
-  FETCH(`
-    mutation {
-      counter: updateCounter(id: "${ id }", title: "${ title }") {
-        ${ COUNTER }
-      }
-    }
-  `)
+  FETCH(`mutation{counter:updateCounter(id:"${ id }",title:"${ title }"){${ COUNTER }}}`)
 
-export const deleteCounter = (id) =>
-  FETCH(`
-    mutation {
-      counter: deleteCounter(id: "${ id }") {
-        ${ COUNTER }
-      }
-    }
-  `)
+export const deleteCounter = id =>
+  FETCH(`mutation{counter:deleteCounter(id:"${ id }"){${ COUNTER }}}`)
