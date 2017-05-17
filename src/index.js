@@ -34,7 +34,7 @@ export const counters$ = () =>
     .mergeMap(() => Observable.fromPromise(counters()))
 
 export const counter = id =>
-  FETCH(`{Counter(id:"${ id }"){ ${ COUNTER }}}`)
+  FETCH(`{counter:Counter(id:"${ id }"){ ${ COUNTER }}}`)
 
 export const counter$ = id =>
   tick$
