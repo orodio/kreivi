@@ -1,10 +1,11 @@
 import 'babel-polyfill'
 import fetch from 'isomorphic-fetch'
 import { Observable } from 'rxjs/Observable'
-import 'rxjs/add/operator/mergeMap'
 import 'rxjs/add/observable/fromPromise'
 import 'rxjs/add/observable/interval'
+import 'rxjs/add/operator/mergeMap'
 import 'rxjs/add/operator/share'
+import 'rxjs/add/operator/do'
 
 const URL = 'https://api.graph.cool/simple/v1/cj2rx8x5bk1td0160k06m4pps'
 const POLL_RATE = 500
